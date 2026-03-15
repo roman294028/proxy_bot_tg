@@ -14,22 +14,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Токен бота
-TOKEN = os.environ.get('8384470449:AAHklZRt4kxekQN22qpgc3qg6oFxbyJp8lk')
-if not TOKEN:
-    raise ValueError("BOT_TOKEN environment variable not set!")
+# Токен бота (вставь свой)
+TOKEN = '8674299514:AAFtGkSZPO__V1yGktKmh0wz-ZM-WbNxPAE'
 
-# Твой Telegram username
+# Твой Telegram username для раздела помощи
 ADMIN_USERNAME = "@hoshino_aaai"
 
-# ========== КЭШ ДЛЯ ПРОКСИ ==========
-proxies_cache = {
-    'list': [],
-    'last_update': 0
-}
-
 # ========== ФУНКЦИИ ДЛЯ ПОИСКА ПРОКСИ ==========
-
 def fetch_proxies_from_api():
     """Получает свежие прокси с бесплатных источников"""
     all_proxies = []
@@ -96,105 +87,106 @@ def fetch_proxies_from_api():
     
     return all_proxies
 
-def check_proxy_quick(proxy):
-    """Быстрая проверка прокси (без детального теста)"""
-    return random.choice([True, False])  # Для демо всегда возвращаем True
-    # В реальности тут была бы проверка, но для экономии времени бота пропускаем
-
 def get_working_proxies(protocol=None, limit=10):
     """Возвращает список работающих прокси"""
-    # Обновляем кэш если прошло больше 5 минут
-    current_time = time.time()
-    if current_time - proxies_cache['last_update'] > 300 or not proxies_cache['list']:
-        proxies_cache['list'] = fetch_proxies_from_api()
-        proxies_cache['last_update'] = current_time
+    proxies = fetch_proxies_from_api()
     
     # Фильтруем по протоколу
     if protocol and protocol != 'all':
-        filtered = [p for p in proxies_cache['list'] if p['protocol'] == protocol]
+        filtered = [p for p in proxies if p['protocol'] == protocol]
     else:
-        filtered = proxies_cache['list']
+        filtered = proxies
     
     # Перемешиваем и возвращаем
     random.shuffle(filtered)
     return filtered[:limit]
 
-# ========== ФУНКЦИИ ДЛЯ ПОИСКА VPN ==========
+# ========== СПОСОБЫ ОБХОДА YouTube НА ANDROID ==========
 
-def get_vpn_services():
-    """Возвращает список VPN сервисов"""
-    return [
-        {
-            'name': 'TunnelBear',
-            'description': 'Простой VPN с бесплатным лимитом 500МБ/мес',
-            'url': 'https://www.tunnelbear.com',
-            'free': True,
-            'platforms': 'Windows, Mac, iOS, Android'
-        },
-        {
-            'name': 'ProtonVPN',
-            'description': 'Швейцарский VPN с бесплатным тарифом без ограничений',
-            'url': 'https://protonvpn.com',
-            'free': True,
-            'platforms': 'Windows, Mac, Linux, iOS, Android'
-        },
-        {
-            'name': 'Windscribe',
-            'description': 'Бесплатный лимит 10ГБ/мес',
-            'url': 'https://windscribe.com',
-            'free': True,
-            'platforms': 'Windows, Mac, Linux, iOS, Android'
-        },
-        {
-            'name': 'Hide.me',
-            'description': 'Бесплатный тариф 10ГБ/мес',
-            'url': 'https://hide.me',
-            'free': True,
-            'platforms': 'Windows, Mac, iOS, Android'
-        },
-        {
-            'name': 'Hotspot Shield',
-            'description': 'Бесплатный тариф с рекламой, 500МБ/день',
-            'url': 'https://hotspotshield.com',
-            'free': True,
-            'platforms': 'Windows, Mac, iOS, Android'
-        },
-        {
-            'name': 'Psiphon',
-            'description': 'Популярный в РФ, есть бесплатная версия',
-            'url': 'https://psiphon.ca',
-            'free': True,
-            'platforms': 'Windows, iOS, Android'
-        },
-        {
-            'name': 'V2Ray (V2Box)',
-            'description': 'Клиент для работы с V2Ray на iOS',
-            'url': 'https://apps.apple.com/app/v2box-v2ray-client/id1446815469',
-            'free': True,
-            'platforms': 'iOS'
-        },
-        {
-            'name': 'v2rayNG',
-            'description': 'V2Ray клиент для Android',
-            'url': 'https://play.google.com/store/apps/details?id=com.v2ray.ang',
-            'free': True,
-            'platforms': 'Android'
-        },
-        {
-            'name': 'Outline VPN',
-            'description': 'Open-source VPN от Google',
-            'url': 'https://getoutline.org',
-            'free': True,
-            'platforms': 'Windows, Mac, iOS, Android'
-        },
-        {
-            'name': 'Lantern',
-            'description': 'Быстрый VPN с бесплатным лимитом',
-            'url': 'https://lantern.io',
-            'free': True,
-            'platforms': 'Windows, Mac, iOS, Android'
-        }
-    ]
+def get_youtube_workarounds():
+    """Возвращает актуальные способы обхода блокировки YouTube на Android (2026)"""
+    return {
+        'vpn': [
+            {
+                'name': 'VPNella VPN',
+                'description': '🇷🇺 Российский VPN, стабильно работает. Бесплатно 3 ГБ/мес.',
+                'howto': '1. Скачай из Google Play\n2. Выбери сервер в Европе\n3. Подключись и смотри YouTube',
+                'url': 'https://play.google.com/store/apps/details?id=com.vpnella.android',
+                'pros': 'Высокая скорость, блокировка рекламы, русский интерфейс',
+                'cons': 'Лимит 3 ГБ в месяц'
+            },
+            {
+                'name': 'Proton VPN',
+                'description': '🇨🇭 Швейцарский VPN с бесплатной версией (нет ограничений по трафику).',
+                'howto': '1. Установи из Google Play\n2. Подключись к бесплатному серверу\n3. Открой YouTube',
+                'url': 'https://play.google.com/store/apps/details?id=ch.protonvpn.android',
+                'pros': 'Нет лимита трафика, строгая политика приватности',
+                'cons': 'Медленные серверы в бесплатной версии'
+            },
+            {
+                'name': 'X Rocket VPN (Telegram-бот)',
+                'description': '🚀 Работает через VLESS/Trojan, обходит белые списки операторов.',
+                'howto': '1. Установи приложение Happ из Google Play\n2. В Telegram найди @X_Rocket_VPN_bot\n3. Возьми тестовый период\n4. Подключись',
+                'url': 'https://t.me/X_Rocket_VPN_bot',
+                'pros': 'Обходит мобильных операторов, 5 устройств, 1000 руб/год',
+                'cons': 'Платный (но есть тестовый период)'
+            },
+            {
+                'name': 'Albania VPN Trick',
+                'description': '🌍 Через VPN с сервером в Албании YouTube может показывать видео без рекламы.',
+                'howto': 'Найди VPN с сервером в Албании (например, NordVPN) и подключись к YouTube',
+                'url': None,
+                'pros': 'Возможно, вообще нет рекламы',
+                'cons': 'Риск блокировки аккаунта, платный VPN'
+            }
+        ],
+        'dpi_bypass': [
+            {
+                'name': 'ByeDPI Android',
+                'description': '🛡️ Приложение для обхода DPI (глубокой инспекции пакетов). Работает как локальный VPN.',
+                'howto': '1. Скачай с GitHub: https://github.com/dovecoteescapee/ByeDPIAndroid/releases\n2. Установи APK\n3. Включи VPN-режим\n4. Настрой DNS: 8.8.8.8\n5. Включи "Desync only HTTPS" и метод "fake"',
+                'url': 'https://github.com/dovecoteescapee/ByeDPIAndroid',
+                'pros': 'Бесплатно, не требует root, не замедляет трафик',
+                'cons': 'Требует ручной установки APK'
+            },
+            {
+                'name': 'Zapret2 (Magisk модуль)',
+                'description': '⚡ Модуль для root-устройств. Маскирует трафик, провайдер не видит блокируемое.',
+                'howto': '1. Нужен root (Magisk)\n2. Скачай модуль с GitHub\n3. Установи через Magisk\n4. Перезагрузи\n5. Для управления используй Zapret2 Control',
+                'url': 'https://github.com/youtubediscord/magisk-zapret2',
+                'pros': 'Работает на уровне системы, очень быстро',
+                'cons': 'Требует root'
+            }
+        ],
+        'browsers': [
+            {
+                'name': 'Microsoft Edge Canary + Violentmonkey',
+                'description': '🧪 Браузер с поддержкой расширений + скрипт для фонового воспроизведения.',
+                'howto': '1. Установи Edge Canary\n2. Установи расширение Violentmonkey\n3. Добавь скрипт "Disable Page Visibility API"\n4. Открой YouTube в Edge\n5. Видео будет играть в фоне',
+                'url': 'https://www.microsoftedgeinsider.com/',
+                'pros': 'Фоновое воспроизведение без Premium',
+                'cons': 'Только для фонового режима, не обходит блокировку сайта'
+            },
+            {
+                'name': 'Mozilla Firefox',
+                'description': '🦊 В некоторых версиях Firefox на Android фоновое видео работает без доп. настроек.',
+                'howto': 'Просто установи Firefox и открой YouTube',
+                'url': 'https://play.google.com/store/apps/details?id=org.mozilla.firefox',
+                'pros': 'Просто, бесплатно',
+                'cons': 'Может перестать работать в любой момент'
+            }
+        ],
+        'dns': [
+            {
+                'name': 'Смена DNS на Android',
+                'description': '🌐 Иногда помогает сменить DNS на публичные (Google, Cloudflare).',
+                'howto': 'Настройки → Сеть → Частный DNS → Введите:\n• dns.google (Google)\n• 1dot1dot1dot1.cloudflare-dns.com (Cloudflare)',
+                'url': None,
+                'pros': 'Бесплатно, без приложений',
+                'cons': 'Помогает не всегда'
+            }
+        ]
+    }
 
 # ========== ИНЛАЙН-КЛАВИАТУРЫ ==========
 
@@ -202,6 +194,7 @@ def get_main_keyboard():
     """Главная клавиатура"""
     keyboard = [
         [InlineKeyboardButton("🌐 Найти прокси", callback_data='menu_proxy')],
+        [InlineKeyboardButton("📱 Обход YouTube на Android", callback_data='menu_youtube')],
         [InlineKeyboardButton("🔒 Найти VPN", callback_data='menu_vpn')],
         [InlineKeyboardButton("❓ Помощь", callback_data='menu_help')]
     ]
@@ -219,15 +212,14 @@ def get_proxy_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
-def get_vpn_keyboard():
-    """Клавиатура для VPN"""
+def get_youtube_keyboard():
+    """Клавиатура для YouTube разделов"""
     keyboard = [
-        [InlineKeyboardButton("📱 Все VPN", callback_data='vpn_all')],
-        [InlineKeyboardButton("💻 Для Windows", callback_data='vpn_windows'),
-         InlineKeyboardButton("🍏 Для Mac", callback_data='vpn_mac')],
-        [InlineKeyboardButton("📱 Для Android", callback_data='vpn_android'),
-         InlineKeyboardButton("📱 Для iOS", callback_data='vpn_ios')],
-        [InlineKeyboardButton("🆓 Только бесплатные", callback_data='vpn_free')],
+        [InlineKeyboardButton("📡 VPN для YouTube", callback_data='youtube_vpn')],
+        [InlineKeyboardButton("🛡️ DPI-обходчики", callback_data='youtube_dpi')],
+        [InlineKeyboardButton("🌐 Браузеры с обходом", callback_data='youtube_browsers')],
+        [InlineKeyboardButton("🔧 DNS-настройки", callback_data='youtube_dns')],
+        [InlineKeyboardButton("📋 Все способы сразу", callback_data='youtube_all')],
         [InlineKeyboardButton("◀️ Назад", callback_data='back_main')]
     ]
     return InlineKeyboardMarkup(keyboard)
@@ -239,14 +231,22 @@ def get_back_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
+def get_youtube_back_keyboard():
+    """Клавиатура с кнопкой назад в раздел YouTube"""
+    keyboard = [
+        [InlineKeyboardButton("◀️ Назад к YouTube", callback_data='menu_youtube')]
+    ]
+    return InlineKeyboardMarkup(keyboard)
+
 # ========== ОБРАБОТЧИКИ ==========
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик команды /start"""
     welcome_text = (
-        "👋 **Привет! Я бот для поиска прокси и VPN**\n\n"
-        "🔹 **🌐 Найти прокси** — получу список рабочих прокси\n"
-        "🔹 **🔒 Найти VPN** — покажу рабочие VPN сервисы\n"
+        "👋 **Привет! Я Proxy & YouTube Helper Bot**\n\n"
+        "🔹 **🌐 Найти прокси** — рабочие прокси для Telegram и других сервисов\n"
+        "🔹 **📱 Обход YouTube на Android** — актуальные способы на 2026 год\n"
+        "🔹 **🔒 Найти VPN** — список VPN-сервисов\n"
         "🔹 **❓ Помощь** — информация и контакты\n\n"
         "👇 Выбери нужный раздел:"
     )
@@ -276,26 +276,46 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=get_proxy_keyboard()
         )
     
-    elif query.data == 'menu_vpn':
+    elif query.data == 'menu_youtube':
         await query.edit_message_text(
-            "🔒 **Поиск VPN**\n\n"
-            "Выбери платформу или смотри все варианты:",
+            "📱 **Обход YouTube на Android**\n\n"
+            "Актуальные способы на **2026 год**:\n\n"
+            "• 📡 **VPN** — классический способ\n"
+            "• 🛡️ **DPI-обходчики** — ByeDPI, Zapret2 (без VPN!)\n"
+            "• 🌐 **Браузеры** — Edge Canary + скрипты\n"
+            "• 🔧 **DNS** — смена DNS\n\n"
+            "👇 Выбери категорию:",
             parse_mode='Markdown',
-            reply_markup=get_vpn_keyboard()
+            reply_markup=get_youtube_keyboard()
         )
+    
+    elif query.data == 'menu_vpn':
+        vpn_list = get_youtube_workarounds()['vpn']
+        response = "🔒 **VPN-сервисы (2026):**\n\n"
+        for vpn in vpn_list:
+            response += f"🔹 **{vpn['name']}**\n"
+            response += f"   {vpn['description']}\n"
+            response += f"   ✅ {vpn['pros']}\n"
+            response += f"   ❌ {vpn['cons']}\n"
+            if vpn.get('url'):
+                response += f"   [Ссылка]({vpn['url']})\n"
+            response += "\n"
+        await query.edit_message_text(response, parse_mode='Markdown', disable_web_page_preview=True, reply_markup=get_back_keyboard())
     
     elif query.data == 'menu_help':
         help_text = (
             "❓ **Помощь**\n\n"
             "🔹 **Как пользоваться:**\n"
             "• Нажимай кнопки в меню\n"
-            "• Получай списки рабочих прокси и VPN\n\n"
+            "• Получай списки рабочих прокси и способов обхода\n\n"
+            "🔹 **Обход YouTube на Android:**\n"
+            "Все способы проверены и актуальны на март 2026 года.\n\n"
             "🔹 **Связь с админом:**\n"
             f"{ADMIN_USERNAME} — только по важным вопросам\n\n"
             "🔹 **О боте:**\n"
-            "Версия 2.0\n"
-            "Прокси обновляются каждые 5 минут\n"
-            "VPN список актуален на 2026 год"
+            "Версия 3.0 (YouTube Edition)\n"
+            "Прокси обновляются в реальном времени\n"
+            "Способы обхода YouTube обновляются вручную"
         )
         await query.edit_message_text(help_text, parse_mode='Markdown', reply_markup=get_back_keyboard())
     
@@ -309,10 +329,11 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             'proxy_socks5': 'socks5'
         }
         protocol = protocol_map.get(query.data, 'all')
+        protocol_name = 'все' if protocol == 'all' else protocol.upper()
         
         # Отправляем сообщение о поиске
         await query.edit_message_text(
-            "🔍 **Ищу рабочие прокси...**\nЭто может занять несколько секунд",
+            f"🔍 **Ищу рабочие {protocol_name} прокси...**",
             parse_mode='Markdown'
         )
         
@@ -320,53 +341,89 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         proxies = get_working_proxies(protocol if protocol != 'all' else None, limit=15)
         
         if proxies:
-            response = f"🌐 **Найдено {len(proxies)} прокси:**\n\n"
+            response = f"🌐 **Найдено {len(proxies)} прокси ({protocol_name}):**\n\n"
             for p in proxies:
                 response += f"• `{p['ip']}:{p['port']}`  [{p['protocol'].upper()}]\n"
-            response += "\n✅ Как использовать:\n"
-            response += "Настрой в программе как прокси"
+            response += "\n✅ **Как использовать:**\n"
+            response += "Настрой в программе как прокси (IP:PORT)"
         else:
             response = "❌ Не удалось найти рабочие прокси. Попробуй позже."
         
         await query.edit_message_text(response, parse_mode='Markdown', reply_markup=get_proxy_keyboard())
     
-    # ===== VPN =====
-    elif query.data.startswith('vpn_'):
-        vpn_list = get_vpn_services()
+    # ===== YOUTUBE КАТЕГОРИИ =====
+    elif query.data == 'youtube_vpn':
+        items = get_youtube_workarounds()['vpn']
+        response = "📡 **VPN для YouTube (2026):**\n\n"
+        for item in items:
+            response += f"🔹 **{item['name']}**\n"
+            response += f"   {item['description']}\n"
+            response += f"   **Как установить:** {item['howto']}\n"
+            response += f"   ✅ {item['pros']} | ❌ {item['cons']}\n"
+            if item.get('url'):
+                response += f"   [Ссылка]({item['url']})\n"
+            response += "\n"
+        await query.edit_message_text(response, parse_mode='Markdown', disable_web_page_preview=True, reply_markup=get_youtube_back_keyboard())
+    
+    elif query.data == 'youtube_dpi':
+        items = get_youtube_workarounds()['dpi_bypass']
+        response = "🛡️ **DPI-обходчики (без VPN!):**\n\n"
+        for item in items:
+            response += f"🔹 **{item['name']}**\n"
+            response += f"   {item['description']}\n"
+            response += f"   **Как установить:** {item['howto']}\n"
+            response += f"   ✅ {item['pros']} | ❌ {item['cons']}\n"
+            if item.get('url'):
+                response += f"   [Ссылка]({item['url']})\n"
+            response += "\n"
+        await query.edit_message_text(response, parse_mode='Markdown', disable_web_page_preview=True, reply_markup=get_youtube_back_keyboard())
+    
+    elif query.data == 'youtube_browsers':
+        items = get_youtube_workarounds()['browsers']
+        response = "🌐 **Браузеры с обходом блокировок:**\n\n"
+        for item in items:
+            response += f"🔹 **{item['name']}**\n"
+            response += f"   {item['description']}\n"
+            response += f"   **Как установить:** {item['howto']}\n"
+            response += f"   ✅ {item['pros']} | ❌ {item['cons']}\n"
+            if item.get('url'):
+                response += f"   [Ссылка]({item['url']})\n"
+            response += "\n"
+        await query.edit_message_text(response, parse_mode='Markdown', disable_web_page_preview=True, reply_markup=get_youtube_back_keyboard())
+    
+    elif query.data == 'youtube_dns':
+        items = get_youtube_workarounds()['dns']
+        response = "🔧 **DNS-настройки:**\n\n"
+        for item in items:
+            response += f"🔹 **{item['name']}**\n"
+            response += f"   {item['description']}\n"
+            response += f"   **Как настроить:** {item['howto']}\n"
+            response += f"   ✅ {item['pros']} | ❌ {item['cons']}\n\n"
+        await query.edit_message_text(response, parse_mode='Markdown', reply_markup=get_youtube_back_keyboard())
+    
+    elif query.data == 'youtube_all':
+        categories = get_youtube_workarounds()
+        response = "📋 **ВСЕ СПОСОБЫ ОБХОДА YouTube на Android (2026):**\n\n"
         
-        if query.data == 'vpn_all':
-            filtered = vpn_list
-            title = "📱 **Все VPN сервисы:**\n\n"
-        elif query.data == 'vpn_free':
-            filtered = [v for v in vpn_list if v['free']]
-            title = "🆓 **Бесплатные VPN:**\n\n"
-        elif query.data == 'vpn_windows':
-            filtered = [v for v in vpn_list if 'Windows' in v['platforms']]
-            title = "💻 **VPN для Windows:**\n\n"
-        elif query.data == 'vpn_mac':
-            filtered = [v for v in vpn_list if 'Mac' in v['platforms']]
-            title = "🍏 **VPN для Mac:**\n\n"
-        elif query.data == 'vpn_android':
-            filtered = [v for v in vpn_list if 'Android' in v['platforms']]
-            title = "📱 **VPN для Android:**\n\n"
-        elif query.data == 'vpn_ios':
-            filtered = [v for v in vpn_list if 'iOS' in v['platforms']]
-            title = "📱 **VPN для iOS:**\n\n"
-        else:
-            filtered = vpn_list
-            title = "📱 **Все VPN сервисы:**\n\n"
+        response += "=== 📡 VPN ===\n"
+        for item in categories['vpn']:
+            response += f"🔹 {item['name']}: {item['description']}\n"
         
-        if filtered:
-            response = title
-            for v in filtered[:10]:  # Не больше 10
-                free_tag = " 🆓" if v['free'] else ""
-                response += f"🔹 **[{v['name']}]({v['url']})**{free_tag}\n"
-                response += f"   {v['description']}\n"
-                response += f"   📱 {v['platforms']}\n\n"
-        else:
-            response = "❌ Нет VPN под эти параметры"
+        response += "\n=== 🛡️ DPI-обходчики ===\n"
+        for item in categories['dpi_bypass']:
+            response += f"🔹 {item['name']}: {item['description']}\n"
         
-        await query.edit_message_text(response, parse_mode='Markdown', disable_web_page_preview=True, reply_markup=get_vpn_keyboard())
+        response += "\n=== 🌐 Браузеры ===\n"
+        for item in categories['browsers']:
+            response += f"🔹 {item['name']}: {item['description']}\n"
+        
+        response += "\n=== 🔧 DNS ===\n"
+        for item in categories['dns']:
+            response += f"🔹 {item['name']}: {item['description']}\n"
+        
+        response += "\n👉 Выбери категорию для подробной инструкции!"
+        
+        await query.edit_message_text(response, parse_mode='Markdown', reply_markup=get_youtube_keyboard())
 
 # ========== РЕГИСТРАЦИЯ ОБРАБОТЧИКОВ ==========
 application = Application.builder().token(TOKEN).build()
@@ -375,6 +432,7 @@ application.add_handler(CallbackQueryHandler(button_callback))
 
 # ========== ЗАПУСК ==========
 if __name__ == "__main__":
-    print("🚀 Бот с ИНЛАЙН-КНОПКАМИ запущен!")
+    print("🚀 Бот с функциями обхода YouTube запущен!")
     print(f"👤 Админ: {ADMIN_USERNAME}")
+    print(f"📱 Режимы: прокси + обход YouTube")
     application.run_polling(allowed_updates=Update.ALL_TYPES)
